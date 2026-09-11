@@ -4,6 +4,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
 import { tokenBlackListModel } from "../models/blackList.model.js";
+import { loginUserSchema, registerUserSchema } from "../validators/user.validator.js";
+
+
 
 /**
  * @name registerUserController
@@ -14,22 +17,26 @@ import { tokenBlackListModel } from "../models/blackList.model.js";
 
 export async function registerUserController(req:Request, res: Response){
 
-    const {username, email, password} = req.body
+    const result = registerUserSchema.safeParse(req.body)
 
-    if(!username || !email || !password){
-        return res.status(400).json({
-            success: false,
-            message: "All fields are required"
+    if(!result.success){
+        return res.status(411).send({
+          success: false,  
+          error: "Incorrect Format",
+          message: result.error.issues[0].message  
         })
     }
 
+    const {username, email, password} = result.data
+
     try {
         // check if user already exists
-        const userExists = await userModel.findOne({email:email})
+        const userExists = await userModel.findOne({$or:[{username},{email}]})
+
         if(userExists){
             return res.status(400).json({
                 success: false,
-                message: "Account already exists with this email"
+                message: "Account already exists with this email and username"
             })
         }
 
@@ -43,13 +50,19 @@ export async function registerUserController(req:Request, res: Response){
 
         if(user){
 
-            const token = jwt.sign({userID: user._id}, env.JWT_SECRET, {expiresIn: "7d"});
+            const token = jwt.sign(
+                {
+                userId: user._id,
+                username: user.username
+            }, 
+            env.JWT_SECRET,
+            {expiresIn: "3d"});
 
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
             });
 
             return res.status(201).json({
@@ -63,11 +76,6 @@ export async function registerUserController(req:Request, res: Response){
             });
         }
 
-        return res.status(201).json({
-            success: true,
-            message: "User registered successfully"
-        });
-
     } catch (error) {
         console.error("Error occurred while registering user:", error);
         return res.status(500).json({
@@ -76,6 +84,7 @@ export async function registerUserController(req:Request, res: Response){
         });
     }
 }
+
 
 
 /**
@@ -87,14 +96,16 @@ export async function registerUserController(req:Request, res: Response){
 
 export async function loginUserController(req:Request, res: Response){
 
-    const { email, password} = req.body
+    const result = loginUserSchema.safeParse(req.body) 
 
-    if(  !email || !password){
-        return res.status(400).json({
-            success: false,
-            message: "All fields are required"
+     if(!result.success){
+        return res.status(411).send({
+          error: "Incorrect Format",
+          message : result.error.issues[0].message  
         })
     }
+
+    const { email, password} = result.data
 
     try {
       
@@ -112,7 +123,10 @@ export async function loginUserController(req:Request, res: Response){
                 })
             }
 
-            const token = jwt.sign({userID: user._id}, env.JWT_SECRET, {expiresIn: "7d"});
+            const token = jwt.sign({
+                userId: user._id,
+                username: user.username
+            }, env.JWT_SECRET, {expiresIn: "7d"});
 
             res.cookie("token", token, {
                 httpOnly: true,
@@ -133,7 +147,7 @@ export async function loginUserController(req:Request, res: Response){
         }else{
             return res.status(400).json({
                 success: false,
-                message: "Invalid credentials"
+                message: "Invalid email and password"
             })
         }
 
@@ -148,11 +162,13 @@ export async function loginUserController(req:Request, res: Response){
 }
 
 
+
 /**
  * @name logoutUserController
  * @description logout a user, clears the token cookie and adds the token to the blacklist
  * @access Public
  */
+
 
 export async function logoutUserController(req:Request, res: Response){
 
@@ -189,18 +205,22 @@ export async function logoutUserController(req:Request, res: Response){
 }
 
 
+
+
+
 /**
  * @name getMeController
  * @description get the user details from the token, expects token in the request cookies
  * @access Private   
  */
 
+
 export async function getMeController(req: Request, res: Response) {
     
     try {
        
         const user = await userModel.findById({
-            _id: (req as any).userID 
+            _id: (req as any).user.userId
         })
 
         if (user) {

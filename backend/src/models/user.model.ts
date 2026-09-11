@@ -5,17 +5,20 @@ const userSchema = new mongoose.Schema({
 
     username: {
         type: String,
-        unique: [true, "username already taken"],
-        required: true
+        unique: true,
+        required: [true, "Username is required"],
+        trim: true
     },
     email : {
         type: String,
-        unique: [true,"Account already exists with this email"],
-        required: true
+        unique: true,
+        required: [true, "Email is required"],
+        trim: true
     },
     password: {
         type: String,
-        required: true
+        required: [true, "Password is required"],
+        trim: true
     }
 
 },{timestamps: true})

@@ -10,4 +10,5 @@ const blackListSchema = new Schema({
     timestamps: true
 });
 
+
 export const tokenBlackListModel = model("BlackList", blackListSchema);

@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken"
 import { env } from "../config/env.js"
 import { tokenBlackListModel } from "../models/blackList.model.js"
 import { Request, Response, NextFunction } from "express"
+import { AuthUser } from "../types/auth.types.js";
+
 
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -28,11 +30,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         }
 
         // verify token
-        const decoded = jwt.verify(token, env.JWT_SECRET) as {userID: string};
+        const decoded = jwt.verify(token, env.JWT_SECRET) as AuthUser;
 
-        (req as any).userID = decoded.userID;
-
+        req.user = decoded;
+        console.log(req.user);
         next()
+
     }catch(error){
         console.error("Error occurred while verifying token:", error);
         return res.status(401).json({

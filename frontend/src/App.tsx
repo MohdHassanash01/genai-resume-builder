@@ -1,10 +1,15 @@
+import { RouterProvider } from "react-router"
+import { router } from "./app.routes"
+import { AuthProvider } from "./features/auth/auth.context"
 
 
 const App = () => {
   return (
-    <div className="w-full h-screen bg-amber-400">
-      
-    </div>
+    <>
+    <AuthProvider>
+    <RouterProvider router={router}/>
+    </AuthProvider>
+    </>
   )
 }
 
