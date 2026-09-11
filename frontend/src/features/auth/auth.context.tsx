@@ -14,8 +14,11 @@ interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>
 
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  authLoading: boolean;
+  setAuthLoading: React.Dispatch<React.SetStateAction<boolean>>;
+
+  actionLoading: boolean;
+  setActionLoading: React.Dispatch<React.SetStateAction<boolean>>;
 
   error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
@@ -26,7 +29,8 @@ export const AuthContext = createContext<AuthContextType | null>(null)
 export const AuthProvider = ({children}:{children: ReactNode}) => {
 
     const [user, setUser] = useState<User | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [authLoading, setAuthLoading] = useState(true)
+    const [actionLoading, setActionLoading] = useState(false)
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -35,10 +39,10 @@ export const AuthProvider = ({children}:{children: ReactNode}) => {
         try {
             const data = await getMe()
             setUser(data.user)
-        } catch (err) {
+        } catch  {
           setUser(null)
         }finally{
-           setLoading(false)
+           setAuthLoading(false)
         }
       }
 
@@ -49,10 +53,12 @@ export const AuthProvider = ({children}:{children: ReactNode}) => {
     return <AuthContext.Provider value={{
         user,
         setUser,
-        loading,
-        setLoading,
+        authLoading,
+        setAuthLoading,
         error,
-        setError
+        setError,
+        actionLoading,
+        setActionLoading
     }}>
         {children}
     </AuthContext.Provider>

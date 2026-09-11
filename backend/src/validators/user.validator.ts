@@ -48,9 +48,5 @@ export const loginUserSchema = z.object({
         .email({ message: "Please enter a valid email address" }),
 
         password: z.string()
-             .nonempty({ message: "Password is required" })
-        .min(5, { message: "Password must be at least 5 characters long"})
-        .max(20, { message: "Password must be less than 20 characters" }) 
-     
-
+             .nonempty({ message: "Password is required" }) 
     })    

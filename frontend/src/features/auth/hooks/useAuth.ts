@@ -16,21 +16,27 @@ export const useAuth = () => {
     throw new Error("useAuth must be used within an AuthProvider")
   }
 
-    const { user, setUser, loading, setLoading, error, setError} = context
+    const { user, setUser, authLoading, setAuthLoading, error, setError, actionLoading,
+        setActionLoading} = context
 
     const handleLogin = async({email,password}:{email:string, password: string}) => {
 
     try {
-        setLoading(true)
+        setActionLoading(true)
+        setError(null)
+
         const data = await login(email, password)
         setUser(data.user)
+        return true
+
     } catch (error) {
         if (axios.isAxiosError(error)) {
             setError(error.response?.data?.message)
             console.log(error.response?.data?.message);
+            return false;
     }
         }finally{
-            setLoading(false)
+            setActionLoading(false)
         }
     }
 
@@ -39,9 +45,10 @@ export const useAuth = () => {
 
       try {
         
-        setLoading(true)
+        setActionLoading(true)
         setError(null)
         const data = await register(username, email, password)
+
         setUser(data.user)
         return true
       } catch (error) {
@@ -51,7 +58,7 @@ export const useAuth = () => {
         return false
         
       }finally{
-        setLoading(false)
+        setActionLoading(false)
       }
     }
 
@@ -59,7 +66,7 @@ export const useAuth = () => {
     const handleLogout = async() => {
 
         try {
-        setLoading(true)
+        setActionLoading(true)
         await logout()
         setUser(null)
 
@@ -69,17 +76,20 @@ export const useAuth = () => {
             setError(message);
             console.log("error occur during logout :", error);
         }finally{
-            setLoading(false)
+            setActionLoading(false)
         }
     }
 
 
     return {
         user,
-        loading,
+        authLoading,
+        setAuthLoading,
         error,
         handleRegister,
         handleLogin,
-        handleLogout
+        handleLogout,
+        actionLoading,
+        setActionLoading
     }
 }

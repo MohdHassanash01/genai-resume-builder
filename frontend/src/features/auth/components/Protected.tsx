@@ -1,5 +1,5 @@
 import { useAuth } from "../hooks/useAuth"
-import { Navigate, useNavigate } from "react-router"
+import { Navigate } from "react-router"
 import {  type ReactNode } from "react"
 
 interface ProtectedProps {
@@ -7,10 +7,10 @@ interface ProtectedProps {
 }
 
 const Protected = ({ children }: ProtectedProps) => {
-  const { loading, user } = useAuth()
+  const { authLoading, user } = useAuth()
   
 
-  if (loading) {
+  if (authLoading) {
     return (
       <main>
         <h1>Loading......</h1>
