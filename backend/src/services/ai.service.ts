@@ -69,7 +69,7 @@ export async function generateInterviewReport({
         contents: prompt,
         config: {
             responseMimeType: "application/json",
-            responseSchema: interviewReportJsonSchema,
+            responseSchema: interviewReportJsonSchema
         },
     });
 
@@ -80,9 +80,6 @@ export async function generateInterviewReport({
     }
 
     const report = interviewReportSchema.parse(JSON.parse(response.text));
-
-    console.log("Generated Interview Report:");
-    console.log(report);
 
     return report;
 }

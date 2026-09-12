@@ -7,8 +7,7 @@ import cors from "cors"
 import { ConnectionDB } from "./config/db.js"
 import { authRouter } from "./routes/auth.route.js"
 dotenv.config()
-import {resume, selfDescription, jobDescription} from "./temp.js"
-import { generateInterviewReport } from "./services/ai.service.js"
+import { interviewRouter } from "./routes/interview.route.js"
 
 const app = express()
 
@@ -26,15 +25,12 @@ app.use(cors({
 // })
 
 
+
 /* using all the routes here */
 
 app.use("/api/auth",authRouter)
+app.use("/api/interview",interviewRouter)
 
-
-generateInterviewReport({
-    resume,
-    selfDescription,
-    jobDescription})
 
 app.listen(env.PORT,function(){
     ConnectionDB()
