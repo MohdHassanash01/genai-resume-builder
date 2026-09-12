@@ -6,6 +6,7 @@ import { env } from "./config/env.js"
 import cors from "cors"
 import { ConnectionDB } from "./config/db.js"
 import { authRouter } from "./routes/auth.route.js"
+import { generateInterviewReport } from "./services/ai.service.js"
 
 dotenv.config()
 
@@ -29,6 +30,7 @@ app.use(cors({
 
 app.use("/api/auth",authRouter)
 
+generateInterviewReport()
 
 app.listen(env.PORT,function(){
     ConnectionDB()
