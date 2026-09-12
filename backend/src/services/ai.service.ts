@@ -40,7 +40,7 @@ const interviewReportSchema = z.object({
 const interviewReportJsonSchema = z.toJSONSchema(interviewReportSchema);
 
 
-async function generateInterviewReport({
+export async function generateInterviewReport({
     resume,
     selfDescription,
     jobDescription,
@@ -52,16 +52,16 @@ async function generateInterviewReport({
 
 
     const prompt = `
-Generate an interview report based on the following information:
+            Generate an interview report based on the following information:
 
-Resume:
-${resume}
+            Resume:
+            ${resume}
 
-Self Description:
-${selfDescription}
+            Self Description:
+            ${selfDescription}
 
-Job Description:
-${jobDescription}
+            Job Description:
+            ${jobDescription}
 `;
 
     const response = await ai.models.generateContent({

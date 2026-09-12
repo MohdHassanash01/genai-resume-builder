@@ -1,5 +1,5 @@
 
-const resume = `# Mohammad Hassan Ashraf
+export const resume = `# Mohammad Hassan Ashraf
 
 **Full Stack Developer | MERN | TypeScript | AI**
 
@@ -146,12 +146,8 @@ WebSockets, Socket.IO, Yjs, BullMQ, Node Cron, Razorpay, Cloudinary
 * Strong understanding of modern full-stack development practices and Git-based workflows.
 `
 
-const selfDescription = `I am a Full Stack Developer with a strong foundation in building scalable web applications using the MERN stack and TypeScript. I have hands-on experience in developing RESTful APIs, implementing authentication systems, integrating payment gateways, and deploying production-ready applications using Docker and AWS. My recent focus has been on exploring Generative AI and AI agents to create intelligent and automation-driven applications. I am passionate about learning new technologies and continuously improving my skills to deliver high-quality software solutions.`
+export const selfDescription = `I am a Full Stack Developer with a strong foundation in building scalable web applications using the MERN stack and TypeScript. I have hands-on experience in developing RESTful APIs, implementing authentication systems, integrating payment gateways, and deploying production-ready applications using Docker and AWS. My recent focus has been on exploring Generative AI and AI agents to create intelligent and automation-driven applications. I am passionate about learning new technologies and continuously improving my skills to deliver high-quality software solutions.`
 
-const jobDescription = `We are seeking a talented Full Stack Developer to join our dynamic team. The ideal candidate will have experience in building scalable web applications using the MERN stack and TypeScript. You will be responsible for developing RESTful APIs, implementing authentication systems, integrating payment gateways, and deploying production-ready applications using Docker and AWS. Additionally, we are looking for someone who is passionate about exploring Generative AI and AI agents to create intelligent and automation-driven applications.`
 
-module.exports = {
-    resume,
-    selfDescription,
-    jobDescription
-}
+export const jobDescription = `We are seeking a talented Full Stack Developer to join our dynamic team. The ideal candidate will have experience in building scalable web applications using the MERN stack and TypeScript. You will be responsible for developing RESTful APIs, implementing authentication systems, integrating payment gateways, and deploying production-ready applications using Docker and AWS. Additionally, we are looking for someone who is passionate about exploring Generative AI and AI agents to create intelligent and automation-driven applications.`
+
