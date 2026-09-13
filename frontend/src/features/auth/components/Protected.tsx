@@ -13,7 +13,7 @@ const Protected = ({ children }: ProtectedProps) => {
   if (authLoading) {
     return (
       <main>
-        <h1>Loading......</h1>
+        <h1 className="text-red-300">Loading......</h1>
       </main>
     )
   }
@@ -22,7 +22,7 @@ const Protected = ({ children }: ProtectedProps) => {
     return <Navigate to="/login" replace />
   }
 
-  return <>{children}</>
+  return children
 }
 
 export default Protected

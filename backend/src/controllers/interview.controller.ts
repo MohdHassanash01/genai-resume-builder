@@ -5,6 +5,11 @@ import { InterviewReportModel } from "../models/interviewReport.model.js";
 import { Request, Response } from "express";
 
 
+/**
+ * @description Controller to generate interview report based on user's resume, self-description and job description
+ * @route POST /api/interview
+ * @access Private
+ */
 
 export async function generateInterviewReportController(    req: Request, res: Response)    { 
     
@@ -71,4 +76,51 @@ export async function generateInterviewReportController(    req: Request, res: R
         });
     }
    
+}
+
+
+/**
+ * @description Controller to fetch interview report based on interviewId
+ * @route GET /api/interview/report/:interviewId
+ * @access Private
+ */
+
+export async function getInterviewReportController(req: Request, res: Response) {
+    try {
+         
+        const { interviewId } = req.params;
+        
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            });
+        }
+
+        const interviewReport = await InterviewReportModel.findOne({
+            _id: interviewId,
+            user: req.user.userId
+        }); 
+
+        if (!interviewReport) {
+            return res.status(404).json({
+                success: false,
+                message: "Interview report not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Interview report fetched successfully",
+            data: interviewReport
+        });
+
+
+}catch (error) {
+        console.error("Error fetching interview report:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
 }
