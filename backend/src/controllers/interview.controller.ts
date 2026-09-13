@@ -124,3 +124,51 @@ export async function getInterviewReportController(req: Request, res: Response) 
         });
     }
 }
+
+
+
+/**
+ * @description Controller to fetch interview report based on interviewId
+ * @route GET /api/interview/report/:interviewId
+ * @access Private
+ */
+
+export async function getInterviewReportsController(req: Request, res: Response) {
+    try {
+         
+        const { interviewId } = req.params;
+        
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            });
+        }
+
+        const interviewReport = await InterviewReportModel.find({
+            _id: interviewId,
+            user: req.user.userId
+        }); 
+
+        if (interviewReport.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Interview report not exists"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Interview report fetched successfully",
+            data: interviewReport
+        });
+
+
+}catch (error) {
+        console.error("Error fetching interview report:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+}
