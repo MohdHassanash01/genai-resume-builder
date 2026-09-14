@@ -4,15 +4,30 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import GradientWaves from "@/components/GradientWaves"
+import { useInterview } from "../hook/useInterview"
+import { useNavigate } from "react-router"
 
 const Home = () => {
+  
+  const { generateReport, loading } = useInterview()
+  const [jobDescription, setJobDescription] = useState("")
+  const [selfDescription, setSelfDescription] = useState("")
+  
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [fileName, setFileName] = useState<string | null>(null)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    setFileName(file ? file.name : null)
+  const navigate = useNavigate()
+
+  const handleGenerateReport = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const resumeFile = fileInputRef.current?.files?.[0]
+
+    const data = await generateReport(jobDescription, selfDescription, resumeFile!)
+    console.log(data)
+    if(data?.success && data?.interviewReport?.interviewId){
+      navigate(`/interview/${data.interviewReport.interviewId}`)
+    }
   }
+
 
   return (
     <div style={{ width: '100%', minHeight: '100vh', position: 'relative',  overflow: 'hidden' }}>
@@ -75,7 +90,8 @@ const Home = () => {
           </p>
         </div>
 
-        <form className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+        <form className="grid grid-cols-1 lg:grid-cols-5 gap-10" 
+        onSubmit={handleGenerateReport}>
 
           {/* Left: job description */}
           <div className="lg:col-span-3">
@@ -95,6 +111,7 @@ const Home = () => {
                 }}
             >
               <Textarea
+              onChange={(e) => setJobDescription(e.target.value)}
                 name="jobDescription"
                 id="jobDescription"
                 placeholder="Paste the job description here — responsibilities, requirements, anything you were given."
@@ -163,6 +180,7 @@ const Home = () => {
                   A few lines about you
                 </label>
                 <Textarea
+                  onChange={(e) => setSelfDescription(e.target.value)}
                   name="selfDescription"
                   id="selfDescription"
                   placeholder="Your background, what you're proud of, what you're aiming for next."
