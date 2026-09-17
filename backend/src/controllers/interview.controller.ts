@@ -60,6 +60,8 @@ export async function generateInterviewReportController(    req: Request, res: R
         skillGaps: interviewReportByAi.skillGap,
 
         preparationPlan: interviewReportByAi.preparationPlan,
+
+        title: interviewReportByAi.title
     })
 
     return res.status(201).json({
@@ -86,6 +88,8 @@ export async function generateInterviewReportController(    req: Request, res: R
  */
 
 export async function getInterviewReportController(req: Request, res: Response) {
+    console.log("requestion recevied");
+    
     try {
          
         const { interviewId } = req.params;

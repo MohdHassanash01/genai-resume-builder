@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react"
+import {  useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -13,18 +13,29 @@ const Home = () => {
   const [jobDescription, setJobDescription] = useState("")
   const [selfDescription, setSelfDescription] = useState("")
   
-  const fileInputRef = useRef<HTMLInputElement>(null)
+ const [fileName, setFileName] = useState<string | null>(null)
+ const [resumeFile, setResumeFile] = useState<File | null>(null)
+const fileInputRef = useRef<HTMLInputElement>(null)
+
+
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]
+  setResumeFile(file)
+  setFileName(file ? file.name : null)
+}
 
   const navigate = useNavigate()
 
+
   const handleGenerateReport = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const resumeFile = fileInputRef.current?.files?.[0]
 
-    const data = await generateReport(jobDescription, selfDescription, resumeFile!)
-    console.log(data)
-    if(data?.success && data?.interviewReport?.interviewId){
-      navigate(`/interview/${data.interviewReport.interviewId}`)
+    if (!resumeFile) return 
+
+    const interviewId = await generateReport(jobDescription, selfDescription, resumeFile)
+
+    if(interviewId){
+      navigate(`/interview/${interviewId}`)
     }
   }
 
@@ -153,8 +164,8 @@ const Home = () => {
                   className="hidden"
                 />
                 <button
+                onClick={() => fileInputRef.current?.click()}
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
                   className="w-full flex items-center justify-between rounded-sm px-4 py-3 text-left text-[14px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#A32638]"
                   style={{
                       border: "1px solid rgba(255, 255, 255, 0.12)",
@@ -198,13 +209,14 @@ const Home = () => {
             <Button
               type="submit"
               className="mt-6 h-12 rounded-sm text-[15px] font-medium hover:opacity-90 transition-opacity"
+              
               style={{
                   background: "#A32638",
                   color: "#F8F6EF",
                   fontFamily: "'IBM Plex Sans', sans-serif",
                 }}
             >
-              Generate interview questions
+              {loading ?"Generating interview report": "Generate interview report"}
             </Button>
           </div>
         </form>

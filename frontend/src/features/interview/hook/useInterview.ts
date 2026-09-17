@@ -2,6 +2,7 @@
 import { useContext } from "react"
 import {generateInterviewReport,getInterviewReport,getAllInterviewReports} from "../services/interview.api"
 import { InterviewContext } from "../interview.contex"
+import { getErrorMessage } from "@/utils/getErrorMessage"
 
 
 export const useInterview = () => {
@@ -22,29 +23,41 @@ export const useInterview = () => {
         setLoading(true)
         try {
             const res = await generateInterviewReport(jobDescription, selfDescription, resume)    
-
+            console.log(res.data);
+            
             if(res.success){
-                setReport(res.interviewReport)
+                setReport(res.data)
             }
 
+            return res.data._id
+
         } catch (error) {
-            console.log(error)
+
+        console.log("error occur during register :", error);
+        const message = getErrorMessage(error);
+        console.log(message);
+        
+        return false
         } finally {
             setLoading(false)
         }
     }
+
 
     const getReport = async (interviewId:string) => {
 
         setLoading(true)
         try {
             const res = await getInterviewReport(interviewId)
+            console.log(res);
             
             if(res.success){
-                setReport(res.interviewReport)
+                setReport(res.data)
             }
         } catch (error) {
-            console.log(error)
+        console.log("error occur during register :", error);
+        const message = getErrorMessage(error);
+        console.log(message);
         } finally {
             setLoading(false)
         }
@@ -59,7 +72,10 @@ export const useInterview = () => {
                 setReports(res.interviewReports)
             }
         } catch (error) {
-            console.log(error)
+        console.log("error occur during register :", error);
+        const message = getErrorMessage(error);
+        console.log(message);
+
         } finally {
             setLoading(false)
         }

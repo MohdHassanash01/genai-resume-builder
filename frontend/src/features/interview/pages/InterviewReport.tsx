@@ -1,10 +1,8 @@
-import { report } from '@/utils/sampleData'
-import { useState } from 'react'
+// import { report } from '@/utils/sampleData'
+import { useState,useEffect } from 'react'
 import { useParams } from 'react-router'
+import { useInterview } from '../hook/useInterview'
 
-// import { useInterview } from '../hooks/useInterview.js'
-
-const ACCENT = '#ff2d78'
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
@@ -12,7 +10,8 @@ const NAV_ITEMS = [
     { id: 'roadmap', label: 'Road Map', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11" /></svg>) },
 ]
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// ── Sub-components ─────────────────────────────────────────────────
+
 const QuestionCard = ({ item, index }) => {
     const [open, setOpen] = useState(false)
     return (
@@ -76,34 +75,36 @@ const RoadMapDay = ({ day }) => (
 
 // ── Main Component ───────────────────────────────────────────────────────────────
 const InterviewReport = () => {
-      console.log("hello");
-      console.log(report);
-      
   
       const [activeNav, setActiveNav] = useState('technical')
   
-      // const { interviewId } = useParams()
-      // const { report, getReportById, loading, getResumePdf } = useInterview()
+      const { interviewId } = useParams()
+
+      const { getReport, loading,
+        report } = useInterview()
+
+        console.log(report);
+        
   
-      // useEffect(() => {
-      //     if (interviewId) getReportById(interviewId)
-      // }, [interviewId])
+      useEffect(() => {
+          if (interviewId) getReport(interviewId)
+      }, [interviewId])
   
-      // if (loading || !report) {
-      //     return (
-      //         <main className="w-full min-h-screen flex items-center justify-center bg-[#0d1117] text-[#e6edf3]">
-      //             <h1>Loading your interview plan...</h1>
-      //         </main>
-      //     )
-      // }
+      if (loading || !report) {
+          return (
+              <main className="w-full min-h-screen flex items-center justify-center bg-[#0d1117] text-[#e6edf3]">
+                  <h1>Loading your interview plan...</h1>
+              </main>
+          )
+      }
   
       const scoreColorClass =
           report.matchScore >= 80 ? 'border-[#3fb950]' :
           report.matchScore >= 60 ? 'border-[#f5a623]' : 'border-[#ff4d4d]'
   
       return (
-          <div className="w-full min-h-screen bg-[#0d1117] text-[#e6edf3] font-sans flex items-stretch p-6 box-border">
-              <div className="flex w-full max-w-[1280px] mx-auto bg-[#161b22] border border-[#2a3348] rounded-2xl justify-between">
+                <div className="w-full min-h-screen bg-[#0d1117] text-[#e6edf3] font-sans flex items-stretch p-6 box-border">
+                    <div className="flex w-full max-w-[1280px] mx-auto bg-[#161b22] border border-[#2a3348] rounded-2xl justify-between">
   
                   {/* ── Left Nav ── */}
                   <nav className="w-[220px] flex-shrink-0 py-7 px-4 flex flex-col justify-between gap-1">
@@ -163,12 +164,12 @@ const InterviewReport = () => {
                               <div className="flex items-baseline gap-3 mb-6 pb-4 border-b border-[#2a3348]">
                                   <h2 className="text-[1.1rem] font-bold text-[#e6edf3] m-0">Behavioral Questions</h2>
                                   <span className="text-[0.8rem] text-[#7d8590] bg-[#1c2230] py-[0.15rem] px-[0.6rem] rounded-full border border-[#2a3348]">
-                                      {report.behavioralQuestions.length} questions
+                        {report.behavioralQuestions.length} questions
                                   </span>
                               </div>
                               <div className="flex flex-col gap-3">
-                                  {report.behavioralQuestions.map((q, i) => (
-                                      <QuestionCard key={i} item={q} index={i} />
+                    {report.behavioralQuestions.map((q, i) => (
+                    <QuestionCard key={i} item={q} index={i} />
                                   ))}
                               </div>
                           </section>

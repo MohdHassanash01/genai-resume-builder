@@ -12,7 +12,7 @@ const api = axios.create({
  * @description service to generate interview report based on job description, self description and resume
  */
 
-export  const generateInterviewReport = async (jobDescription: string, selfDescription: string,resume: string) => {
+export  const generateInterviewReport = async (jobDescription: string, selfDescription: string,resume: File) => {
 
     const formData = new FormData();
     formData.append("jobDescription", jobDescription);
@@ -36,6 +36,8 @@ export  const generateInterviewReport = async (jobDescription: string, selfDescr
 
 export const getInterviewReport = async (interviewId:string) => {
     const res = await api.get(`/api/interview/report/${interviewId}`);
+    console.log(res);
+    
     return res.data
 }
 
