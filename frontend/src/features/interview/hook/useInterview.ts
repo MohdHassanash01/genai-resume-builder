@@ -53,7 +53,9 @@ export const useInterview = () => {
             
             if(res.success){
                 setReport(res.data)
-            }
+            }else {
+            console.error("Report fetch returned success:false", res)
+        }
         } catch (error) {
         console.log("error occur during register :", error);
         const message = getErrorMessage(error);

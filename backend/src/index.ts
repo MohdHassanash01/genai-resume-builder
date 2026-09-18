@@ -24,6 +24,10 @@ app.use(cors({
 //     res.send("health ok")
 // })
 
+app.use((req, res, next) => {
+    console.log("INCOMING:", req.method, req.originalUrl)
+    next()
+})
 
 
 /* using all the routes here */

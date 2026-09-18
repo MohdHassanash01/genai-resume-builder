@@ -10,7 +10,10 @@ import { AuthUser } from "../types/auth.types.js";
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
 
     const token = req.cookies.token;
+    console.log("cookies received:", req.cookies);
+
     if(!token){
+        console.log("no token found");   // add this
         return res.status(401).json({
             success: false,
             message: "Unauthorized, token not found"

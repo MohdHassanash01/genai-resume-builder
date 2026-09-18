@@ -54,16 +54,16 @@ const QuestionCard = ({ item, index }) => {
     )
 }
 
-const RoadMapDay = ({ day }) => (
+const RoadMapDay = ({plan}) => (
     <div className="flex flex-col gap-2 py-3 pl-14 relative before:content-[''] before:absolute before:left-[21px] before:top-[1.05rem] before:w-3.5 before:h-3.5 before:rounded-full before:bg-[#161b22] before:border-2 before:border-[#ff2d78]">
         <div className="flex items-center gap-2.5">
             <span className="text-[0.7rem] font-bold text-[#ff2d78] bg-[#ff2d78]/10 border border-[#ff2d78]/25 py-[0.1rem] px-2 rounded-full">
-                Day {day.day}
+                Day {plan.day}
             </span>
-            <h3 className="m-0 text-[0.95rem] font-semibold text-[#e6edf3]">{day.focus}</h3>
+            <h3 className="m-0 text-[0.95rem] font-semibold text-[#e6edf3]">{plan.focus}</h3>
         </div>
         <ul className="list-none m-0 p-0 flex flex-col gap-1.5">
-            {day.tasks.map((task, i) => (
+            {plan.task.map((task:string, i:number) => (
                 <li key={i} className="flex items-start gap-2 text-[0.845rem] text-[#959ca6] leading-[1.5]">
                     <span className="flex-shrink-0 w-[5px] h-[5px] rounded-full bg-[#7d8590] mt-2" />
                     {task}
@@ -79,6 +79,7 @@ const InterviewReport = () => {
       const [activeNav, setActiveNav] = useState('technical')
   
       const { interviewId } = useParams()
+    //   console.log("interviewId from URL:", interviewId)
 
       const { getReport, loading,
         report } = useInterview()
@@ -131,7 +132,7 @@ const InterviewReport = () => {
                           })}
                       </div>
                       <button
-                          // onClick={() => { getResumePdf(interviewId) }}
+                         
                           className="flex items-center justify-center bg-[#ff2d78] text-white font-medium text-sm py-2.5 px-3 rounded-lg hover:opacity-90 transition-opacity"
                       >
                           <svg height="0.8rem" style={{ marginRight: '0.8rem' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.6144 17.7956 11.492 15.7854C12.2731 13.9966 13.6789 12.5726 15.4325 11.7942L17.8482 10.7219C18.6162 10.381 18.6162 9.26368 17.8482 8.92277L15.5079 7.88394C13.7092 7.08552 12.2782 5.60881 11.5105 3.75894L10.6215 1.61673C10.2916.821765 9.19319.821767 8.8633 1.61673L7.97427 3.75892C7.20657 5.60881 5.77553 7.08552 3.97685 7.88394L1.63658 8.92277C.868537 9.26368.868536 10.381 1.63658 10.7219L4.0523 11.7942C5.80589 12.5726 7.21171 13.9966 7.99275 15.7854L8.8704 17.7956C9.20776 18.5682 10.277 18.5682 10.6144 17.7956ZM19.4014 22.6899 19.6482 22.1242C20.0882 21.1156 20.8807 20.3125 21.8695 19.8732L22.6299 19.5353C23.0412 19.3526 23.0412 18.7549 22.6299 18.5722L21.9121 18.2532C20.8978 17.8026 20.0911 16.9698 19.6586 15.9269L19.4052 15.3156C19.2285 14.8896 18.6395 14.8896 18.4628 15.3156L18.2094 15.9269C17.777 16.9698 16.9703 17.8026 15.956 18.2532L15.2381 18.5722C14.8269 18.7549 14.8269 19.3526 15.2381 19.5353L15.9985 19.8732C16.9874 20.3125 17.7798 21.1156 18.2198 22.1242L18.4667 22.6899C18.6473 23.104 19.2207 23.104 19.4014 22.6899Z" /></svg>
@@ -164,11 +165,11 @@ const InterviewReport = () => {
                               <div className="flex items-baseline gap-3 mb-6 pb-4 border-b border-[#2a3348]">
                                   <h2 className="text-[1.1rem] font-bold text-[#e6edf3] m-0">Behavioral Questions</h2>
                                   <span className="text-[0.8rem] text-[#7d8590] bg-[#1c2230] py-[0.15rem] px-[0.6rem] rounded-full border border-[#2a3348]">
-                        {report.behavioralQuestions.length} questions
+                        {report.behaviourQuestions.length} questions
                                   </span>
                               </div>
                               <div className="flex flex-col gap-3">
-                    {report.behavioralQuestions.map((q, i) => (
+                    {report.behaviourQuestions.map((q, i) => (
                     <QuestionCard key={i} item={q} index={i} />
                                   ))}
                               </div>
@@ -184,8 +185,8 @@ const InterviewReport = () => {
                                   </span>
                               </div>
                               <div className="flex flex-col relative before:content-[''] before:absolute before:left-[28px] before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-[#ff2d78] before:to-[#ff2d78]/10 before:rounded-[1px]">
-                                  {report.preparationPlan.map((day) => (
-                                      <RoadMapDay key={day.day} day={day} />
+                                  {report.preparationPlan.map((plan,index) => (
+                                      <RoadMapDay key={index} plan={plan} />
                                   ))}
                               </div>
                           </section>
